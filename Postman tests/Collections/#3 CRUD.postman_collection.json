@@ -28,7 +28,12 @@
 						"id": "e5b03ba2-680b-4baa-94b8-2cb9334162ef",
 						"exec": [
 							"// Сохраняем id нового мира для последующей проверки",
-							"pm.collectionVariables.set('new_world_id', pm.response.json()['world'][0]['id']);"
+							"pm.collectionVariables.set('new_world_id', pm.response.json()['world'][0]['id']);",
+							"",
+							"// Проверка статуса",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -115,7 +120,12 @@
 					"script": {
 						"id": "8e780414-2e0a-43c2-a6f4-e1f0c5318182",
 						"exec": [
-							"// id пересохранять не нужно - оно осталось прежним"
+							"// id пересохранять не нужно - оно осталось прежним",
+							"",
+							"// Проверка статуса",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -275,19 +285,19 @@
 	],
 	"variable": [
 		{
-			"id": "875d9e94-67f1-4531-88f3-66425d4c655b",
+			"id": "8fe2e511-3f42-4931-a86d-8e92e9545653",
 			"key": "new_world_name",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "566ee12c-ce90-4f97-9f6c-d70ae66663a0",
+			"id": "c58412b2-836d-47d1-b950-f63c76b72f80",
 			"key": "current_date",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "0778a6f9-f48b-4bf1-b729-e7edfa4bcdda",
+			"id": "3e0a5058-5162-48a6-a3b7-8334e615eb09",
 			"key": "new_world_id",
 			"value": "",
 			"type": "string"
