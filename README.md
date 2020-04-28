@@ -1,5 +1,7 @@
 # BowserAPI-PostmanDemo
 Небольшой API на Flask + набор коллекций для Postman, созданные для учебных целей
+Создано для вебинара https://www.youtube.com/watch?v=q9Xoic_14M0
+Проект QARATE: https://bit.ly/qarate-public
 
 ## Требования
 - Postman
