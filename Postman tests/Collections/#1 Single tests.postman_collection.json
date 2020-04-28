@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "3cdbc73e-352e-40d7-8de2-8fe90d4ec320",
+		"name": "#1 Single tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Castles list",
+			"item": [
+				{
+					"name": "World 1 Castles list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "92f33916-51f2-4a6b-b4f5-555e76e25996",
+								"exec": [
+									"// Проверка статуса",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Примитивная проверка текста",
+									"pm.test(\"Body text is correct\", function () {",
+									"    var bodyExpected = `{",
+									"  \"castle\": [",
+									"    {",
+									"      \"id\": 1, ",
+									"      \"name\": \"Castle #1\"",
+									"    }, ",
+									"    {",
+									"      \"id\": 2, ",
+									"      \"name\": \"Castle #2\"",
+									"    }, ",
+									"    {",
+									"      \"id\": 3, ",
+									"      \"name\": \"Castle #3\"",
+									"    }, ",
+									"    {",
+									"      \"id\": 4, ",
+									"      \"name\": \"Castle #4\"",
+									"    }, ",
+									"    {",
+									"      \"id\": 5, ",
+									"      \"name\": \"Castle #5\"",
+									"    }",
+									"  ]",
+									"}",
+									"`;",
+									"    pm.response.to.have.body(bodyExpected);",
+									"});",
+									"",
+									"// Проверка JSON - значения по отдельности",
+									"pm.test(\"Body JSON is correct - approach #1\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData['castle'][0]['id']).to.eql(1);",
+									"    pm.expect(jsonData['castle'][0]['name']).to.eql('Castle #1');",
+									"});",
+									"",
+									"// Проверка JSON - объект целиком",
+									"pm.test(\"Body JSON is correct - approach #2\", function () {",
+									"    var bodyExpected = {\"castle\":[{\"id\":1,\"name\":\"Castle #1\"},{\"id\":2,\"name\":\"Castle #2\"},{\"id\":3,\"name\":\"Castle #3\"},{\"id\":4,\"name\":\"Castle #4\"},{\"id\":5,\"name\":\"Castle #5\"}]};",
+									"    var jsonData = pm.response.json();",
+									"    console.log(jsonData);",
+									"    pm.expect(jsonData).to.eql(bodyExpected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BasicUrl}}/world/1/castle",
+							"host": [
+								"{{BasicUrl}}"
+							],
+							"path": [
+								"world",
+								"1",
+								"castle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "World 2 Castles list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "92f33916-51f2-4a6b-b4f5-555e76e25996",
+								"exec": [
+									"// Проверка статуса",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Проверка JSON",
+									"pm.test(\"Body JSON is correct - approach #2\", function () {",
+									"    var bodyExpected = {\"castle\":[{\"id\":6,\"name\":\"Castle #6\"},{\"id\":7,\"name\":\"Castle #7\"},{\"id\":8,\"name\":\"Castle #8\"}]};",
+									"    var jsonData = pm.response.json();",
+									"    console.log(jsonData);",
+									"    pm.expect(jsonData).to.eql(bodyExpected);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BasicUrl}}/world/2/castle",
+							"host": [
+								"{{BasicUrl}}"
+							],
+							"path": [
+								"world",
+								"2",
+								"castle"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "98769a1b-7f25-4175-97d2-870e27de41e7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ecbad51-540a-42ee-a5ba-f6727b84d8c9",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "World 1 - 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "92f33916-51f2-4a6b-b4f5-555e76e25996",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BasicUrl}}/world/100500/castlerock",
+					"host": [
+						"{{BasicUrl}}"
+					],
+					"path": [
+						"world",
+						"100500",
+						"castlerock"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "6620e8ff-7f3c-4637-8087-e04474c170e7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "0d230524-818d-468b-ab5e-031e02903450",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

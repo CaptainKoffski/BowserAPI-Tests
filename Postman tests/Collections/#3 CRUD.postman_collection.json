@@ -1,0 +1,297 @@
+{
+	"info": {
+		"_postman_id": "7f732f37-c308-42bf-9fef-7ce5c224a0e9",
+		"name": "#3 CRUD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create world",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0ec2d51b-1406-415b-a0c5-52a408932feb",
+						"exec": [
+							"// Создаем переменную с именем, которую будем использовать как в запросе, так и в проверке",
+							"pm.collectionVariables.set('new_world_name', pm.variables.replaceIn('{{$randomFirstName}}'));",
+							"// Сохраняем текущую дату для последующих проверок",
+							"const dateNow= new Date();",
+							"pm.collectionVariables.set('current_date', dateNow.toISOString().slice(0, 10));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e5b03ba2-680b-4baa-94b8-2cb9334162ef",
+						"exec": [
+							"// Сохраняем id нового мира для последующей проверки",
+							"pm.collectionVariables.set('new_world_id', pm.response.json()['world'][0]['id']);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"name\": \"{{new_world_name}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BasicUrl}}/addworld",
+					"host": [
+						"{{BasicUrl}}"
+					],
+					"path": [
+						"addworld"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check world",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6e451ec-7350-43d8-bec7-90cc3f7c63da",
+						"exec": [
+							"pm.test(\"Body JSON is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    // id мы получили из ответа на POST-запрос",
+							"    pm.expect(jsonData['world'][0]['id']).to.eql(pm.collectionVariables.get(\"new_world_id\"));",
+							"    // Имя мы сгенерировали случайным образом в pre-скрипте POST-запроса и подставили его в Body POST-запроса",
+							"    pm.expect(jsonData['world'][0]['name']).to.eql(pm.collectionVariables.get(\"new_world_name\"));",
+							"    // Дату мы сохранили в pre-скрипте POST-запроса. В API мы ее не подставляли - он сама сгенерировалась",
+							"    pm.expect(jsonData['world'][0]['creationdate']).to.eql(pm.collectionVariables.get(\"current_date\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BasicUrl}}/world/{{new_world_id}}",
+					"host": [
+						"{{BasicUrl}}"
+					],
+					"path": [
+						"world",
+						"{{new_world_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update world",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d886b619-0efc-40b2-bdba-669659364a2b",
+						"exec": [
+							"// Обновляем переменную с именем",
+							"pm.collectionVariables.set('new_world_name', pm.variables.replaceIn('{{$randomFirstName}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8e780414-2e0a-43c2-a6f4-e1f0c5318182",
+						"exec": [
+							"// id пересохранять не нужно - оно осталось прежним"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"name\": \"{{new_world_name}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BasicUrl}}/world/{{new_world_id}}",
+					"host": [
+						"{{BasicUrl}}"
+					],
+					"path": [
+						"world",
+						"{{new_world_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check world",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cce621fb-a418-4142-8f88-8082864d8515",
+						"exec": [
+							"pm.test(\"Body JSON is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    // id мы получили из ответа на POST-запрос",
+							"    pm.expect(jsonData['world'][0]['id']).to.eql(pm.collectionVariables.get(\"new_world_id\"));",
+							"    // Имя мы сгенерировали случайным образом в pre-скрипте POST-запроса и подставили его в Body POST-запроса",
+							"    pm.expect(jsonData['world'][0]['name']).to.eql(pm.collectionVariables.get(\"new_world_name\"));",
+							"    // Дату мы сохранили в pre-скрипте POST-запроса. В API мы ее не подставляли - он сама сгенерировалась",
+							"    pm.expect(jsonData['world'][0]['creationdate']).to.eql(pm.collectionVariables.get(\"current_date\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BasicUrl}}/world/{{new_world_id}}",
+					"host": [
+						"{{BasicUrl}}"
+					],
+					"path": [
+						"world",
+						"{{new_world_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete world",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0799007d-6521-4451-9daf-a617443643b0",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BasicUrl}}/world/{{new_world_id}}",
+					"host": [
+						"{{BasicUrl}}"
+					],
+					"path": [
+						"world",
+						"{{new_world_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check world",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fae8966c-76c9-47a8-befd-5726f1767519",
+						"exec": [
+							"pm.test(\"Body JSON is empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    // мы должны получить пустой список, т.к. запрашиваемый мир был удален",
+							"    pm.expect(jsonData['world']).to.eql([]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BasicUrl}}/world/{{new_world_id}}",
+					"host": [
+						"{{BasicUrl}}"
+					],
+					"path": [
+						"world",
+						"{{new_world_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0d9ec2eb-12e8-425c-9991-6d1de0c5a002",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "96ca822b-7210-4ec4-9f96-ffb2ce63625e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "875d9e94-67f1-4531-88f3-66425d4c655b",
+			"key": "new_world_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "566ee12c-ce90-4f97-9f6c-d70ae66663a0",
+			"key": "current_date",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "0778a6f9-f48b-4bf1-b729-e7edfa4bcdda",
+			"key": "new_world_id",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -1,0 +1,17 @@
+[
+{
+	"worldid": 1,
+	"castleid": 1,
+	"castlename": "Castle #1"
+},
+{
+	"worldid": 1,
+	"castleid": 5,
+	"castlename": "Castle #5"
+},
+{
+	"worldid": 2,
+	"castleid": 7,
+	"castlename": "Castle #7"
+}
+]

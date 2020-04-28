@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "72b81c6c-57af-45b9-80b0-8bae8b1674e1",
+		"name": "#2 CSV Input",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "World Castles list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eab34a10-29ac-4cac-ba60-ce54637f3e20",
+						"exec": [
+							"// Проверка JSON - значения по отдельности",
+							"pm.test(\"Castle ID and Name are correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData['castle'][0]['id']).to.eql(data.castleid);",
+							"    pm.expect(jsonData['castle'][0]['name']).to.eql(data.castlename);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "417c444d-8903-4909-8aaa-cdbf3a9cda25",
+						"exec": [
+							"console.log(\"WorldID: \" + data.worldid)",
+							"console.log(\"CastleID: \" + data.castleid)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BasicUrl}}/world/{{worldid}}/castle/{{castleid}}",
+					"host": [
+						"{{BasicUrl}}"
+					],
+					"path": [
+						"world",
+						"{{worldid}}",
+						"castle",
+						"{{castleid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

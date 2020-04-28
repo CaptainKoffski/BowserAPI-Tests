@@ -1,0 +1,331 @@
+{
+	"info": {
+		"_postman_id": "2ae14dae-bcd4-402f-9cba-0b9e949a9222",
+		"name": "#4 Coincidence tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Single world",
+			"item": [
+				{
+					"name": "Castles list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7cc4bcff-05b6-442f-b2cf-39114b51c134",
+								"exec": [
+									"var castleIdList = _(JSON.parse(responseBody).castle).pluck('id').value();",
+									"pm.collectionVariables.set(\"castle_id_list\", JSON.stringify(castleIdList));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BasicUrl}}/world/2/castle",
+							"host": [
+								"{{BasicUrl}}"
+							],
+							"path": [
+								"world",
+								"2",
+								"castle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Goombas list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b666bbb1-f356-45f7-9abe-0f4a40229b3d",
+								"exec": [
+									"var goombasCastleIdList = _(JSON.parse(responseBody).goomba).pluck('castleid').value();",
+									"var castleIdList = JSON.parse(pm.collectionVariables.get(\"castle_id_list\"));",
+									"",
+									"",
+									"pm.test(\"All goombas' IDs are in the corresponding worlds' castles\", function () {",
+									"    for (var id of goombasCastleIdList) {",
+									"        pm.expect(castleIdList).to.include(id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BasicUrl}}/world/2/goomba",
+							"host": [
+								"{{BasicUrl}}"
+							],
+							"path": [
+								"world",
+								"2",
+								"goomba"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b5caf242-1116-4d45-9ae7-89decd156289",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "95f55429-903b-4d60-a2d2-c420fc0af344",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "All available worlds",
+			"item": [
+				{
+					"name": "Get worlds list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9458090c-4051-4817-9a38-32348d449dad",
+								"exec": [
+									"var worldIdList = _(JSON.parse(responseBody).world).pluck('id').value();",
+									"var worldIdListLength = worldIdList.length;",
+									"if (worldIdListLength > 0) {",
+									"    pm.collectionVariables.set(\"world_id_list\", JSON.stringify(worldIdList));",
+									"    pm.collectionVariables.set(\"world_id_list_length\", worldIdListLength);",
+									"    pm.collectionVariables.set(\"current_iteration_num\", 0);",
+									"    postman.setNextRequest(\"Get castles list\");",
+									"} else {",
+									"    console.log(\"No studies\");",
+									"    pm.setNextRequest(Null);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BasicUrl}}/world",
+							"host": [
+								"{{BasicUrl}}"
+							],
+							"path": [
+								"world"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get castles list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e57edd10-1de2-4bd0-81cb-e60e66db3dde",
+								"exec": [
+									"var castleIdList = _(JSON.parse(responseBody).castle).pluck('id').value();",
+									"pm.collectionVariables.set(\"castle_id_list\", JSON.stringify(castleIdList));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4591a2bb-09e2-489c-8150-b5dda9deea43",
+								"exec": [
+									"var worldIdList = JSON.parse(pm.collectionVariables.get(\"world_id_list\"));",
+									"var currentIterationNum = _.parseInt(pm.collectionVariables.get(\"current_iteration_num\"));",
+									"var worldId = worldIdList[currentIterationNum];",
+									"pm.collectionVariables.set(\"worldid\", worldId);",
+									"postman.setNextRequest(\"Check goombas list\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BasicUrl}}/world/{{worldid}}/castle",
+							"host": [
+								"{{BasicUrl}}"
+							],
+							"path": [
+								"world",
+								"{{worldid}}",
+								"castle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check goombas list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "184b00f3-97bf-4d6d-9582-db74927421b4",
+								"exec": [
+									"// Получаем список замков, к которым привязаны гумбы",
+									"var goombasCastleIdList = _(JSON.parse(responseBody).goomba).pluck('castleid').value();",
+									"// Получаем список замков в мире (из переменной)",
+									"var castleIdList = JSON.parse(pm.collectionVariables.get(\"castle_id_list\"));",
+									"",
+									"// Определяем необходимость следующей итерации",
+									"var currentIterationNum = _.parseInt(pm.collectionVariables.get(\"current_iteration_num\"));",
+									"var worldIdListLength = _.parseInt(pm.collectionVariables.get(\"world_id_list_length\"));",
+									"pm.collectionVariables.set(\"current_iteration_num\", ++currentIterationNum);",
+									"if (currentIterationNum < worldIdListLength) {",
+									"    postman.setNextRequest(\"Get castles list\");",
+									"}",
+									"",
+									"// Проверяем, все ли гумбы в нужных замках",
+									"pm.test(\"All goombas' IDs are in the corresponding worlds' castles\", function () {",
+									"    for (var id of goombasCastleIdList) {",
+									"        pm.expect(castleIdList).to.include(id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BasicUrl}}/world/{{worldid}}/goomba",
+							"host": [
+								"{{BasicUrl}}"
+							],
+							"path": [
+								"world",
+								"{{worldid}}",
+								"goomba"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bc9e616f-3168-4411-8490-3cef66d098fa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a329210e-6e0d-477f-8e06-c2864d4d3add",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b4c19492-110d-425d-bd06-b76165882e36",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "392a7d46-8021-467a-8e18-01e20c2f6fdd",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8404ae5c-e534-451b-83cd-f8405a34b52c",
+			"key": "[1,2,3,4,5]",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "06112556-e56e-441f-9c10-b3672e4d4ae0",
+			"key": "castle_id_list",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "817191a4-7502-493c-a877-4f0fdffa1f09",
+			"key": "current_iteration_num",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "9bd086f8-65a1-4ef3-9cde-7738e3230337",
+			"key": "world_id_list",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "fe1b18cb-afd2-4db7-b787-4b0b2c842ff1",
+			"key": "world_id_list_length",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "b14ce89a-ba2b-45c8-b50a-ccb8077adad5",
+			"key": "worldid",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
