@@ -13,7 +13,7 @@ app.config['SWAGGER'] = {
     "title": "Flasgger",
     "headers": [
         ('Access-Control-Allow-Origin', '*'),
-        ('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE, OPTIONS"),
+        ('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE"),
         ('Access-Control-Allow-Credentials', "true"),
     ],
     "specs": [
@@ -22,7 +22,9 @@ app.config['SWAGGER'] = {
             "title": "BowserApi",
             "endpoint": 'spec',
             "description": 'Демо API для демонстрации возможностей Postman.\n'
-                           'Создано специально для вебинара QARATE #5: https://youtu.be/q9Xoic_14M0',
+                           'Создано специально для вебинаров\n'
+                           'QARATE #5: https://youtu.be/q9Xoic_14M0\n'
+                           'QARATE #6: https://youtu.be/WVNVeHtmBjc',
             "route": '/spec'
         }
     ]
@@ -30,7 +32,7 @@ app.config['SWAGGER'] = {
 
 swagger = Swagger(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bowser.db'
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
@@ -53,21 +55,22 @@ class Goomba(db.Model):
 
 db.create_all()
 
-for filename in glob.glob('TestData/*.sql'): # loading test data
-    with open(filename, 'r') as test_data_file:
-        query = test_data_file.read()
-        db.engine.execute(query)
-        db.session.commit()
+def load_test_data():
+    for filename in glob.glob('TestData/*.sql'): # loading test data
+        with open(filename, 'r') as test_data_file:
+            query = test_data_file.read()
+            db.engine.execute(query)
+            db.session.commit()
 
-class WorldSchema(ma.ModelSchema):
+class WorldSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = World
 
-class CastleSchema(ma.ModelSchema):
+class CastleSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Castle
 
-class GoombaSchema(ma.ModelSchema):
+class GoombaSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Goomba
         fields = ('id', 'fullname', 'castleid')
@@ -82,6 +85,8 @@ def getworld(worldid=None):
     """
         Возвращает информацию о мире/мирах
         ---
+        tags:
+            - world
         responses:
           200:
             description: Мир возвращен
@@ -99,6 +104,8 @@ def putworld(worldid):
     """
         Обновляет выбранный мир
         ---
+        tags:
+            - world
         responses:
           200:
             description: Мир успешно обновлен
@@ -113,8 +120,10 @@ def putworld(worldid):
 @app.route('/world/<int:worldid>', methods=['DELETE'])
 def deleteworld(worldid):
     """
-        Удалет выбранный мир
+        Удаляет выбранный мир
         ---
+        tags:
+            - world
         responses:
           204:
             description: Мир удален
@@ -129,6 +138,8 @@ def addworld():
     """
         Добавляет новый мир
         ---
+        tags:
+            - world
         responses:
           200:
             description: Мир добавлен
@@ -147,6 +158,8 @@ def castles(worldid, castleid=None):
     """
         Возвращает информацию о замке/замках
         ---
+        tags:
+            - castle
         responses:
           200:
             description: Замок/замки возвращен/возвращены
@@ -159,12 +172,49 @@ def castles(worldid, castleid=None):
     output = castle_schema.dump(castles)
     return jsonify({ 'castle': output })
 
+@app.route('/world/<int:worldid>/castle', methods=['POST'])
+def addcastle(worldid):
+    """
+        Добавляет новый замок
+        ---
+        tags:
+            - castle
+        responses:
+          200:
+            description: Замок добавлен
+    """
+    body_json = request.json
+    castle = Castle(worldid=worldid, name=body_json['name'])
+    db.session.add(castle)
+    db.session.commit()
+    castle_schema = CastleSchema(many=True)
+    output = castle_schema.dump(Castle.query.filter_by(name=body_json['name']).all())
+    return jsonify({'castle': output})
+
+@app.route('/world/<int:worldid>/castle/<int:castleid>', methods=['DELETE'])
+def deletecastle(worldid, castleid):
+    """
+        Удаляет выбранный замок
+        ---
+        tags:
+            - castle
+        responses:
+          204:
+            description: Замок удален
+    """
+    castle = Castle.query.filter_by(worldid=worldid, id=castleid).first()
+    db.session.delete(castle)
+    db.session.commit()
+    return ('', 204)
+
 @app.route('/world/<int:worldid>/goomba', methods=['GET'])
 @app.route('/world/<int:worldid>/goomba/<int:goombaid>', methods=['GET'])
 def goombas(worldid, goombaid=None):
     """
         Возвращает информацию о гумбе/гумбах
         ---
+        tags:
+            - goomba
         responses:
           200:
             description: Гумба/гумбы возвращен/возвращены
@@ -176,6 +226,41 @@ def goombas(worldid, goombaid=None):
     goomba_schema = GoombaSchema(many=True)
     output = goomba_schema.dump(goombas)
     return jsonify({ 'goomba': output })
+
+@app.route('/world/<int:worldid>/goomba', methods=['POST'])
+def addgoomba(worldid):
+    """
+        Добавляет нового гумбу
+        ---
+        tags:
+            - goomba
+        responses:
+          200:
+            description: Гумба добавлен
+    """
+    body_json = request.json
+    goomba = Goomba(worldid=worldid, castleid=body_json['castleid'], name=body_json['name'])
+    db.session.add(goomba)
+    db.session.commit()
+    goomba_schema = GoombaSchema(many=True)
+    output = goomba_schema.dump(Goomba.query.filter_by(name=body_json['name']).all())
+    return jsonify({'goomba': output})
+
+@app.route('/world/<int:worldid>/goomba/<int:goombaid>', methods=['DELETE'])
+def deletegoomba(worldid, goombaid):
+    """
+        Удаляет выбранного гумбу
+        ---
+        tags:
+            - goomba
+        responses:
+          204:
+            description: Гумба удален
+    """
+    goomba = Goomba.query.filter_by(worldid=worldid, id=goombaid).first()
+    db.session.delete(goomba)
+    db.session.commit()
+    return ('', 204)
 
 @app.route('/tos')
 def tos():
