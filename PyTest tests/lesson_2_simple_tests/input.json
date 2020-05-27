@@ -1,0 +1,5 @@
+[
+    [1, 1, {"castle": [{"id": 1, "name": "Castle #1"}]}],
+    [1, 5, {"castle":[{"id": 5, "name": "Castle #5"}]}],
+    [2, 7, {"castle":[{"id": 7, "name": "Castle #7"}]}]
+]
