@@ -9,23 +9,78 @@
 
 ## Требования
 - Postman
-- Python 3.6+
+- Python 3.9+ (рекомендуется последняя версия)
+- uv (современный менеджер пакетов Python)
+
+## Быстрая установка
+
+### 1. Установка Python (если не установлен)
+**Windows:**
+1. Скачать Python с https://www.python.org/downloads/
+2. Запустить установщик, обязательно отметить "Add Python to PATH"
+
+**macOS:**
+```bash
+# С помощью Homebrew (рекомендуется)
+brew install python
+
+# Или скачать с https://www.python.org/downloads/
+```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install python3 python3-pip
+```
+
+### 2. Установка uv (менеджера пакетов)
+**Все операционные системы:**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**Или для Windows PowerShell:**
+```powershell
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+После установки перезапустите терминал или выполните:
+```bash
+source ~/.bashrc  # Linux/macOS
+# или просто закройте и откройте терминал заново
+```
 
 ## Запуск API
-### Установка пакетов
-1. Перейти в папку с BowserAPI
-2. Выполнить
+
+### Установка зависимостей проекта
+1. Открыть терминал/командную строку
+2. Перейти в папку проекта:
+```bash
+cd path/to/BowserAPI-Tests
 ```
-pip install -r requirements.txt
+3. Установить все зависимости одной командой:
+```bash
+uv sync
 ```
-### Запуск Flask
-1. Перейти в папку с BowserAPI
-2. Выполнить
+
+### Запуск Flask API
+1. В папке проекта выполнить:
+```bash
+uv run python BowserAPI/bowserapi.py
 ```
-set FLASK_APP=bowserapi.py
-flask run
+
+**Альтернативный способ (через Flask CLI):**
+```bash
+# Установить переменную окружения
+export FLASK_APP=BowserAPI/bowserapi.py  # Linux/macOS
+# или для Windows:
+# set FLASK_APP=BowserAPI/bowserapi.py
+
+# Запустить
+uv run flask run
 ```
-API доступно по адресу http://127.0.0.1:5000/.
+
+API доступно по адресу http://127.0.0.1:5000/
 
 Swagger доступен на http://127.0.0.1:5000/apidocs/
 
@@ -34,27 +89,67 @@ Swagger доступен на http://127.0.0.1:5000/apidocs/
 1. Открыть Postman
 2. Открыть диалог "Manage environments"
 3. Нажать кнопку "Import"
-4. Выбрать файл окружения
+4. Выбрать файл `Postman tests/Collections/QARATE Localhost.postman_environment.json`
 
 ### Установка коллекций
 1. Открыть Postman
-2. Ctrl+O
-3. В появившемся окне выбрать файл или папку
+2. Ctrl+O (или File → Import)
+3. В появившемся окне выбрать папку `Postman tests/Collections/`
+4. Импортировать все файлы `.postman_collection.json`
 
 ### Запуск тестов
 Смотреть в [вебинаре](https://youtu.be/q9Xoic_14M0)
 
 ## PyTest
-### Установка пакетов
-1. Перейти в папку с PyTest tests
-2. Выполнить
-```
-pip install -r requirements.txt
-```
 
 ### Запуск тестов
-1. В папке "Pytest tests" выполнить
+1. В корневой папке проекта выполнить:
+```bash
+uv run pytest "PyTest tests/"
 ```
-pytest
+
+**Для запуска конкретного теста:**
+```bash
+uv run pytest "PyTest tests/lesson_1_no_pytest/test_no_pytest.py"
 ```
+
+**Для запуска с подробным выводом:**
+```bash
+uv run pytest "PyTest tests/" -v
+```
+
 Подробнее смотреть в [вебинаре](https://youtu.be/WVNVeHtmBjc)
+
+## Полезные команды uv
+
+```bash
+# Добавить новый пакет в проект
+uv add package-name
+
+# Удалить пакет
+uv remove package-name
+
+# Обновить зависимости
+uv sync
+
+# Запуск Python скрипта в виртуальном окружении
+uv run python script.py
+
+# Активация виртуального окружения (опционально)
+source .venv/bin/activate  # Linux/macOS
+# или .venv\Scripts\activate  # Windows
+```
+
+## Устранение проблем
+
+**Проблема: "uv: command not found"**
+- Перезапустите терминал после установки uv
+- Убедитесь, что путь `~/.local/bin` добавлен в PATH
+
+**Проблема: "Python not found"**
+- Убедитесь, что Python установлен и добавлен в PATH
+- Попробуйте команду `python3` вместо `python`
+
+**Проблема с доступом к API:**
+- Убедитесь, что Flask запущен и не выдает ошибки
+- Проверьте, что порт 5000 не занят другим приложением
