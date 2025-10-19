@@ -56,7 +56,8 @@ class Goomba(db.Model):
     castleid = db.Column(db.Integer, db.ForeignKey('castle.id'))
 
 
-db.create_all()
+with app.app_context():
+    db.create_all()
 
 
 def load_test_data():
