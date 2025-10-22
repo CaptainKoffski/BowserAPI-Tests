@@ -1,0 +1,914 @@
+{
+  "components": {
+    "schemas": {
+      "Castle": {
+        "properties": {
+          "id": {
+            "description": "Unique identifier for the castle",
+            "example": 1,
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the castle",
+            "example": "Castle 1",
+            "type": "string"
+          },
+          "worldid": {
+            "description": "ID of the world this castle belongs to",
+            "example": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "CastleInput": {
+        "properties": {
+          "name": {
+            "description": "Name of the new castle",
+            "example": "Castle 1",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "CastleResponse": {
+        "properties": {
+          "castle": {
+            "description": "Array of castle objects",
+            "items": {
+              "$ref": "#/components/schemas/Castle"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "Error": {
+        "properties": {
+          "error": {
+            "description": "Error type",
+            "example": "Not Found",
+            "type": "string"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "example": "The requested resource was not found",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Goomba": {
+        "properties": {
+          "castleid": {
+            "description": "ID of the castle this Goomba belongs to",
+            "example": 1,
+            "type": "integer"
+          },
+          "fullname": {
+            "description": "Full name of the Goomba",
+            "example": "Goomba McGoombface",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for the Goomba",
+            "example": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "GoombaInput": {
+        "properties": {
+          "castleid": {
+            "description": "ID of the castle where the Goomba will reside",
+            "example": 1,
+            "type": "integer"
+          },
+          "name": {
+            "description": "Full name of the new Goomba",
+            "example": "Goomba McGoombface",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "castleid"
+        ],
+        "type": "object"
+      },
+      "GoombaResponse": {
+        "properties": {
+          "goomba": {
+            "description": "Array of goomba objects",
+            "items": {
+              "$ref": "#/components/schemas/Goomba"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "World": {
+        "properties": {
+          "creationdate": {
+            "description": "Date when the world was created",
+            "example": "2023-01-01",
+            "format": "date",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for the world",
+            "example": 1,
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the world",
+            "example": "World 1-1",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "WorldInput": {
+        "properties": {
+          "name": {
+            "description": "Name of the new world",
+            "example": "World 1-1",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "WorldResponse": {
+        "properties": {
+          "world": {
+            "description": "Array of world objects",
+            "items": {
+              "$ref": "#/components/schemas/World"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "name": "QARATE API Support",
+      "url": "https://youtu.be/q9Xoic_14M0"
+    },
+    "description": "Enhanced API with automatic contract generation\n\u0414\u0435\u043c\u043e API \u0434\u043b\u044f \u0434\u0435\u043c\u043e\u043d\u0441\u0442\u0440\u0430\u0446\u0438\u0438 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439 Postman.\n\u0421\u043e\u0437\u0434\u0430\u043d\u043e \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u044c\u043d\u043e \u0434\u043b\u044f \u0432\u0435\u0431\u0438\u043d\u0430\u0440\u043e\u0432\nQARATE #5: https://youtu.be/q9Xoic_14M0\nQARATE #6: https://youtu.be/WVNVeHtmBjc",
+    "title": "BowserAPI",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/addworld": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorldInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "world_created": {
+                    "value": {
+                      "world": [
+                        {
+                          "creationdate": "2023-01-01",
+                          "id": 2,
+                          "name": "World 1-2"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            },
+            "description": "\u041c\u0438\u0440 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u041d\u0435\u0432\u0435\u0440\u043d\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435 \u0437\u0430\u043f\u0440\u043e\u0441\u0430"
+          }
+        },
+        "summary": "\u0414\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u043e\u0432\u044b\u0439 \u043c\u0438\u0440",
+        "tags": [
+          "world"
+        ]
+      }
+    },
+    "/tos": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Terms of Service page"
+          }
+        },
+        "summary": "Terms of Service",
+        "tags": [
+          "misc"
+        ]
+      }
+    },
+    "/world": {
+      "get": {
+        "parameters": [
+          {
+            "description": "ID \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e \u043c\u0438\u0440\u0430 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
+            "in": "path",
+            "name": "worldid",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "world_example": {
+                    "value": {
+                      "world": [
+                        {
+                          "creationdate": "2023-01-01",
+                          "id": 1,
+                          "name": "World 1-1"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            },
+            "description": "\u041c\u0438\u0440(\u044b) \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0435\u043d(\u044b)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u041c\u0438\u0440 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u043e \u043c\u0438\u0440\u0435/\u043c\u0438\u0440\u0430\u0445",
+        "tags": [
+          "world"
+        ]
+      }
+    },
+    "/world/{worldid}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430 \u0434\u043b\u044f \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u044f",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "\u041c\u0438\u0440 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0443\u0434\u0430\u043b\u0435\u043d"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u041c\u0438\u0440 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0423\u0434\u0430\u043b\u044f\u0435\u0442 \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0439 \u043c\u0438\u0440",
+        "tags": [
+          "world"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "description": "ID \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e \u043c\u0438\u0440\u0430 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
+            "in": "path",
+            "name": "worldid",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "world_example": {
+                    "value": {
+                      "world": [
+                        {
+                          "creationdate": "2023-01-01",
+                          "id": 1,
+                          "name": "World 1-1"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            },
+            "description": "\u041c\u0438\u0440(\u044b) \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0435\u043d(\u044b)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u041c\u0438\u0440 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u043e \u043c\u0438\u0440\u0435/\u043c\u0438\u0440\u0430\u0445",
+        "tags": [
+          "world"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430 \u0434\u043b\u044f \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorldInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "world_updated": {
+                    "value": {
+                      "world": [
+                        {
+                          "creationdate": "2023-01-01",
+                          "id": 1,
+                          "name": "Updated World Name"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            },
+            "description": "\u041c\u0438\u0440 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u041c\u0438\u0440 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u041e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u0442 \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0439 \u043c\u0438\u0440",
+        "tags": [
+          "world"
+        ]
+      }
+    },
+    "/world/{worldid}/castle": {
+      "get": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "ID \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e \u0437\u0430\u043c\u043a\u0430 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
+            "in": "path",
+            "name": "castleid",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "castle_example": {
+                    "value": {
+                      "castle": [
+                        {
+                          "id": 1,
+                          "name": "Castle 1",
+                          "worldid": 1
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/CastleResponse"
+                }
+              }
+            },
+            "description": "\u0417\u0430\u043c\u043e\u043a(\u0438) \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0435\u043d(\u044b)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u0417\u0430\u043c\u043e\u043a \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u043e \u0437\u0430\u043c\u043a\u0435/\u0437\u0430\u043c\u043a\u0430\u0445",
+        "tags": [
+          "castle"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430, \u0432 \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u0434\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0437\u0430\u043c\u043e\u043a",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CastleInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "castle_created": {
+                    "value": {
+                      "castle": [
+                        {
+                          "id": 2,
+                          "name": "Castle 2",
+                          "worldid": 1
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/CastleResponse"
+                }
+              }
+            },
+            "description": "\u0417\u0430\u043c\u043e\u043a \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u041d\u0435\u0432\u0435\u0440\u043d\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435 \u0437\u0430\u043f\u0440\u043e\u0441\u0430"
+          }
+        },
+        "summary": "\u0414\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u043e\u0432\u044b\u0439 \u0437\u0430\u043c\u043e\u043a",
+        "tags": [
+          "castle"
+        ]
+      }
+    },
+    "/world/{worldid}/castle/{castleid}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "ID \u0437\u0430\u043c\u043a\u0430 \u0434\u043b\u044f \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u044f",
+            "in": "path",
+            "name": "castleid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "\u0417\u0430\u043c\u043e\u043a \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0443\u0434\u0430\u043b\u0435\u043d"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u0417\u0430\u043c\u043e\u043a \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0423\u0434\u0430\u043b\u044f\u0435\u0442 \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u044b\u0439 \u0437\u0430\u043c\u043e\u043a",
+        "tags": [
+          "castle"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "ID \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0433\u043e \u0437\u0430\u043c\u043a\u0430 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
+            "in": "path",
+            "name": "castleid",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "castle_example": {
+                    "value": {
+                      "castle": [
+                        {
+                          "id": 1,
+                          "name": "Castle 1",
+                          "worldid": 1
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/CastleResponse"
+                }
+              }
+            },
+            "description": "\u0417\u0430\u043c\u043e\u043a(\u0438) \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0435\u043d(\u044b)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u0417\u0430\u043c\u043e\u043a \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u043e \u0437\u0430\u043c\u043a\u0435/\u0437\u0430\u043c\u043a\u0430\u0445",
+        "tags": [
+          "castle"
+        ]
+      }
+    },
+    "/world/{worldid}/goomba": {
+      "get": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "ID \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0439 \u0433\u0443\u043c\u0431\u044b (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
+            "in": "path",
+            "name": "goombaid",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "goomba_example": {
+                    "value": {
+                      "goomba": [
+                        {
+                          "castleid": 1,
+                          "fullname": "Goomba McGoombface",
+                          "id": 1
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/GoombaResponse"
+                }
+              }
+            },
+            "description": "\u0413\u0443\u043c\u0431\u0430(\u044b) \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0435\u043d(\u044b)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u0413\u0443\u043c\u0431\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u043e \u0433\u0443\u043c\u0431\u0435/\u0433\u0443\u043c\u0431\u0430\u0445",
+        "tags": [
+          "goomba"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430, \u0432 \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u0434\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0433\u0443\u043c\u0431\u0430",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoombaInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "goomba_created": {
+                    "value": {
+                      "goomba": [
+                        {
+                          "castleid": 1,
+                          "fullname": "Goomba Junior",
+                          "id": 2
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/GoombaResponse"
+                }
+              }
+            },
+            "description": "\u0413\u0443\u043c\u0431\u0430 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u041d\u0435\u0432\u0435\u0440\u043d\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435 \u0437\u0430\u043f\u0440\u043e\u0441\u0430"
+          }
+        },
+        "summary": "\u0414\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u043e\u0432\u043e\u0433\u043e \u0433\u0443\u043c\u0431\u0443",
+        "tags": [
+          "goomba"
+        ]
+      }
+    },
+    "/world/{worldid}/goomba/{goombaid}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "ID \u0433\u0443\u043c\u0431\u044b \u0434\u043b\u044f \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u044f",
+            "in": "path",
+            "name": "goombaid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "\u0413\u0443\u043c\u0431\u0430 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0443\u0434\u0430\u043b\u0435\u043d"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u0413\u0443\u043c\u0431\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0423\u0434\u0430\u043b\u044f\u0435\u0442 \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0433\u043e \u0433\u0443\u043c\u0431\u0443",
+        "tags": [
+          "goomba"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "description": "ID \u043c\u0438\u0440\u0430",
+            "in": "path",
+            "name": "worldid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "ID \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0439 \u0433\u0443\u043c\u0431\u044b (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
+            "in": "path",
+            "name": "goombaid",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "goomba_example": {
+                    "value": {
+                      "goomba": [
+                        {
+                          "castleid": 1,
+                          "fullname": "Goomba McGoombface",
+                          "id": 1
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/GoombaResponse"
+                }
+              }
+            },
+            "description": "\u0413\u0443\u043c\u0431\u0430(\u044b) \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0435\u043d(\u044b)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "\u0413\u0443\u043c\u0431\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d"
+          }
+        },
+        "summary": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044e \u043e \u0433\u0443\u043c\u0431\u0435/\u0433\u0443\u043c\u0431\u0430\u0445",
+        "tags": [
+          "goomba"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "Local development server",
+      "url": "/"
+    }
+  ]
+}

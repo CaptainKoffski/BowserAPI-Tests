@@ -7,10 +7,32 @@ import glob
 
 app = Flask(__name__)
 
-# Enhanced Swagger configuration with comprehensive schema definitions
+# Enhanced OpenAPI 3.0 configuration with comprehensive schema definitions
 app.config['SWAGGER'] = {
-    "swagger_version": "2.0",
-    "title": "BowserAPI",
+    "openapi": "3.0.3",
+    "info": {
+        "title": "BowserAPI",
+        "version": "1.0.0",
+        "description": "Enhanced API with automatic contract generation\n"
+                      "Демо API для демонстрации возможностей Postman.\n"
+                      "Создано специально для вебинаров\n"
+                      "QARATE #5: https://youtu.be/q9Xoic_14M0\n"
+                      "QARATE #6: https://youtu.be/WVNVeHtmBjc",
+        "contact": {
+            "name": "QARATE API Support",
+            "url": "https://youtu.be/q9Xoic_14M0"
+        }
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Local development server"
+        },
+        {
+            "url": "https://captainkoffski.pythonanywhere.com",
+            "description": "Production server on PythonAnywhere"
+        }
+    ],
     "headers": [
         ('Access-Control-Allow-Origin', '*'),
         ('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE"),
@@ -21,97 +43,154 @@ app.config['SWAGGER'] = {
             "version": "1.0.0",
             "title": "BowserAPI",
             "endpoint": 'spec',
-            "description": 'Enhanced API with automatic contract generation\n'
-                           'Демо API для демонстрации возможностей Postman.\n'
-                           'Создано специально для вебинаров\n'
-                           'QARATE #5: https://youtu.be/q9Xoic_14M0\n'
-                           'QARATE #6: https://youtu.be/WVNVeHtmBjc',
             "route": '/spec'
         }
     ],
-    # Automatic schema definitions for contracts
-    "definitions": {
-        "World": {
-            "type": "object",
-            "properties": {
-                "id": {"type": "integer", "example": 1, "description": "Unique identifier for the world"},
-                "name": {"type": "string", "example": "World 1-1", "description": "Name of the world"},
-                "creationdate": {"type": "string", "format": "date", "example": "2023-01-01", "description": "Date when the world was created"}
-            }
-        },
-        "WorldInput": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string", "example": "World 1-1", "description": "Name of the new world"}
-            },
-            "required": ["name"]
-        },
-        "Castle": {
-            "type": "object",
-            "properties": {
-                "id": {"type": "integer", "example": 1, "description": "Unique identifier for the castle"},
-                "worldid": {"type": "integer", "example": 1, "description": "ID of the world this castle belongs to"},
-                "name": {"type": "string", "example": "Castle 1", "description": "Name of the castle"}
-            }
-        },
-        "CastleInput": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string", "example": "Castle 1", "description": "Name of the new castle"}
-            },
-            "required": ["name"]
-        },
-        "Goomba": {
-            "type": "object",
-            "properties": {
-                "id": {"type": "integer", "example": 1, "description": "Unique identifier for the Goomba"},
-                "fullname": {"type": "string", "example": "Goomba McGoombface", "description": "Full name of the Goomba"},
-                "castleid": {"type": "integer", "example": 1, "description": "ID of the castle this Goomba belongs to"}
-            }
-        },
-        "GoombaInput": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string", "example": "Goomba McGoombface", "description": "Full name of the new Goomba"},
-                "castleid": {"type": "integer", "example": 1, "description": "ID of the castle where the Goomba will reside"}
-            },
-            "required": ["name", "castleid"]
-        },
-        "WorldResponse": {
-            "type": "object",
-            "properties": {
-                "world": {
-                    "type": "array",
-                    "items": {"$ref": "#/definitions/World"},
-                    "description": "Array of world objects"
+    "components": {
+        "schemas": {
+            "World": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Unique identifier for the world"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "World 1-1",
+                        "description": "Name of the world"
+                    },
+                    "creationdate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-01-01",
+                        "description": "Date when the world was created"
+                    }
                 }
-            }
-        },
-        "CastleResponse": {
-            "type": "object",
-            "properties": {
-                "castle": {
-                    "type": "array",
-                    "items": {"$ref": "#/definitions/Castle"},
-                    "description": "Array of castle objects"
+            },
+            "WorldInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "World 1-1",
+                        "description": "Name of the new world"
+                    }
+                },
+                "required": ["name"]
+            },
+            "Castle": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Unique identifier for the castle"
+                    },
+                    "worldid": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "ID of the world this castle belongs to"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Castle 1",
+                        "description": "Name of the castle"
+                    }
                 }
-            }
-        },
-        "GoombaResponse": {
-            "type": "object",
-            "properties": {
-                "goomba": {
-                    "type": "array",
-                    "items": {"$ref": "#/definitions/Goomba"},
-                    "description": "Array of goomba objects"
+            },
+            "CastleInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Castle 1",
+                        "description": "Name of the new castle"
+                    }
+                },
+                "required": ["name"]
+            },
+            "Goomba": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Unique identifier for the Goomba"
+                    },
+                    "fullname": {
+                        "type": "string",
+                        "example": "Goomba McGoombface",
+                        "description": "Full name of the Goomba"
+                    },
+                    "castleid": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "ID of the castle this Goomba belongs to"
+                    }
                 }
-            }
-        },
-        "Error": {
-            "type": "object",
-            "properties": {
-                "error": {"type": "string", "example": "Not Found", "description": "Error type"},
-                "message": {"type": "string", "example": "The requested resource was not found", "description": "Detailed error message"}
+            },
+            "GoombaInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Goomba McGoombface",
+                        "description": "Full name of the new Goomba"
+                    },
+                    "castleid": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "ID of the castle where the Goomba will reside"
+                    }
+                },
+                "required": ["name", "castleid"]
+            },
+            "WorldResponse": {
+                "type": "object",
+                "properties": {
+                    "world": {
+                        "type": "array",
+                        "items": {"$ref": "#/components/schemas/World"},
+                        "description": "Array of world objects"
+                    }
+                }
+            },
+            "CastleResponse": {
+                "type": "object",
+                "properties": {
+                    "castle": {
+                        "type": "array",
+                        "items": {"$ref": "#/components/schemas/Castle"},
+                        "description": "Array of castle objects"
+                    }
+                }
+            },
+            "GoombaResponse": {
+                "type": "object",
+                "properties": {
+                    "goomba": {
+                        "type": "array",
+                        "items": {"$ref": "#/components/schemas/Goomba"},
+                        "description": "Array of goomba objects"
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "example": "Not Found",
+                        "description": "Error type"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "The requested resource was not found",
+                        "description": "Detailed error message"
+                    }
+                }
             }
         }
     }
@@ -188,24 +267,30 @@ def getworld(worldid=None):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: false
         description: ID конкретного мира (опционально)
     responses:
       200:
         description: Мир(ы) успешно возвращен(ы)
-        schema:
-          $ref: '#/definitions/WorldResponse'
-        examples:
+        content:
           application/json:
-            world:
-              - id: 1
-                name: "World 1-1"
-                creationdate: "2023-01-01"
+            schema:
+              $ref: '#/components/schemas/WorldResponse'
+            examples:
+              world_example:
+                value:
+                  world:
+                    - id: 1
+                      name: "World 1-1"
+                      creationdate: "2023-01-01"
       404:
         description: Мир не найден
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     if worldid is None:
         worlds = World.query.all()
@@ -226,29 +311,36 @@ def putworld(worldid):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID мира для обновления
-      - name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/WorldInput'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WorldInput'
     responses:
       200:
         description: Мир успешно обновлен
-        schema:
-          $ref: '#/definitions/WorldResponse'
-        examples:
+        content:
           application/json:
-            world:
-              - id: 1
-                name: "Updated World Name"
-                creationdate: "2023-01-01"
+            schema:
+              $ref: '#/components/schemas/WorldResponse'
+            examples:
+              world_updated:
+                value:
+                  world:
+                    - id: 1
+                      name: "Updated World Name"
+                      creationdate: "2023-01-01"
       404:
         description: Мир не найден
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     world = World.query.filter_by(id=worldid).first()
     if not world:
@@ -270,7 +362,8 @@ def deleteworld(worldid):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID мира для удаления
     responses:
@@ -278,8 +371,10 @@ def deleteworld(worldid):
         description: Мир успешно удален
       404:
         description: Мир не найден
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     world = World.query.filter_by(id=worldid).first()
     if not world:
@@ -296,27 +391,32 @@ def addworld():
     ---
     tags:
       - world
-    parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/WorldInput'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WorldInput'
     responses:
       201:
         description: Мир успешно добавлен
-        schema:
-          $ref: '#/definitions/WorldResponse'
-        examples:
+        content:
           application/json:
-            world:
-              - id: 2
-                name: "World 1-2"
-                creationdate: "2023-01-01"
+            schema:
+              $ref: '#/components/schemas/WorldResponse'
+            examples:
+              world_created:
+                value:
+                  world:
+                    - id: 2
+                      name: "World 1-2"
+                      creationdate: "2023-01-01"
       400:
         description: Неверные данные запроса
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     if not request.json or 'name' not in request.json:
         return jsonify({"error": "Bad Request", "message": "Name is required"}), 400
@@ -341,29 +441,36 @@ def castles(worldid, castleid=None):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID мира
       - name: castleid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: false
         description: ID конкретного замка (опционально)
     responses:
       200:
         description: Замок(и) успешно возвращен(ы)
-        schema:
-          $ref: '#/definitions/CastleResponse'
-        examples:
+        content:
           application/json:
-            castle:
-              - id: 1
-                worldid: 1
-                name: "Castle 1"
+            schema:
+              $ref: '#/components/schemas/CastleResponse'
+            examples:
+              castle_example:
+                value:
+                  castle:
+                    - id: 1
+                      worldid: 1
+                      name: "Castle 1"
       404:
         description: Замок не найден
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     if castleid is None:
         castles = Castle.query.filter_by(worldid=worldid).all()
@@ -384,29 +491,36 @@ def addcastle(worldid):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID мира, в который добавляется замок
-      - name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/CastleInput'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CastleInput'
     responses:
       201:
         description: Замок успешно добавлен
-        schema:
-          $ref: '#/definitions/CastleResponse'
-        examples:
+        content:
           application/json:
-            castle:
-              - id: 2
-                worldid: 1
-                name: "Castle 2"
+            schema:
+              $ref: '#/components/schemas/CastleResponse'
+            examples:
+              castle_created:
+                value:
+                  castle:
+                    - id: 2
+                      worldid: 1
+                      name: "Castle 2"
       400:
         description: Неверные данные запроса
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     if not request.json or 'name' not in request.json:
         return jsonify({"error": "Bad Request", "message": "Name is required"}), 400
@@ -430,12 +544,14 @@ def deletecastle(worldid, castleid):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID мира
       - name: castleid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID замка для удаления
     responses:
@@ -443,8 +559,10 @@ def deletecastle(worldid, castleid):
         description: Замок успешно удален
       404:
         description: Замок не найден
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     castle = Castle.query.filter_by(worldid=worldid, id=castleid).first()
     if not castle:
@@ -465,29 +583,36 @@ def goombas(worldid, goombaid=None):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID мира
       - name: goombaid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: false
         description: ID конкретной гумбы (опционально)
     responses:
       200:
         description: Гумба(ы) успешно возвращен(ы)
-        schema:
-          $ref: '#/definitions/GoombaResponse'
-        examples:
+        content:
           application/json:
-            goomba:
-              - id: 1
-                fullname: "Goomba McGoombface"
-                castleid: 1
+            schema:
+              $ref: '#/components/schemas/GoombaResponse'
+            examples:
+              goomba_example:
+                value:
+                  goomba:
+                    - id: 1
+                      fullname: "Goomba McGoombface"
+                      castleid: 1
       404:
         description: Гумба не найден
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     if goombaid is None:
         goombas = Goomba.query.filter_by(worldid=worldid).all()
@@ -508,29 +633,36 @@ def addgoomba(worldid):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID мира, в который добавляется гумба
-      - name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/GoombaInput'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GoombaInput'
     responses:
       201:
         description: Гумба успешно добавлен
-        schema:
-          $ref: '#/definitions/GoombaResponse'
-        examples:
+        content:
           application/json:
-            goomba:
-              - id: 2
-                fullname: "Goomba Junior"
-                castleid: 1
+            schema:
+              $ref: '#/components/schemas/GoombaResponse'
+            examples:
+              goomba_created:
+                value:
+                  goomba:
+                    - id: 2
+                      fullname: "Goomba Junior"
+                      castleid: 1
       400:
         description: Неверные данные запроса
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     if not request.json or 'name' not in request.json or 'castleid' not in request.json:
         return jsonify({"error": "Bad Request", "message": "Name and castleid are required"}), 400
@@ -554,12 +686,14 @@ def deletegoomba(worldid, goombaid):
     parameters:
       - name: worldid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID мира
       - name: goombaid
         in: path
-        type: integer
+        schema:
+          type: integer
         required: true
         description: ID гумбы для удаления
     responses:
@@ -567,8 +701,10 @@ def deletegoomba(worldid, goombaid):
         description: Гумба успешно удален
       404:
         description: Гумба не найден
-        schema:
-          $ref: '#/definitions/Error'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
     """
     goomba = Goomba.query.filter_by(worldid=worldid, id=goombaid).first()
     if not goomba:
