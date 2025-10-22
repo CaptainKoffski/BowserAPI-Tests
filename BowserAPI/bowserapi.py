@@ -27,6 +27,10 @@ app.config['SWAGGER'] = {
         {
             "url": "/",
             "description": "Local development server"
+        },
+        {
+            "url": "https://captainkoffski.pythonanywhere.com",
+            "description": "Production server on PythonAnywhere"
         }
     ],
     "headers": [
